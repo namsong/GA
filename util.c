@@ -1,4 +1,10 @@
-#incluse "util.h"
+#include "util.h"
+
+
+double randp()
+{ // r0.0 <= p <= 1.0 real random number generator
+	return rand()/RAND_MAX;
+}
 
 /* n 자의 2진수를 실수로 변환
  *  bits : 2진수 배열의 시작 포인터
