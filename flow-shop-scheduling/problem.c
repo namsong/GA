@@ -11,6 +11,7 @@ refs: http://www.acad.ro/sectii2002/proceedings/doc2012-1/10-Ancau.pdf
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <memory.h>
 #include "problem.h"
 
 pro_t P; // problem: global var.

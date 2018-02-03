@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <math.h>
+#include <stdbool.h>
+#include <string.h>
 #include <time.h>
 #include "ga.h"
 #include "util.h"
@@ -107,9 +108,19 @@ void PrintPop(pop_t *p)
 int main(int argc, char *argv[])
 {
     const char *fname = "IPCAR_4.txt";
-    
-    if (1 < argc) {
-        fname = argv[1];
+	int psize = 10;		 // population size
+	double xrate = 0.90; // crossover rate
+	double mrate = 0.05; // mutation rate
+	int maxgen = 10000;  // maximum generation: stop condition
+	bool gantt = false;
+
+    switch(argc) {
+	case 7: gantt = (argv[6][0] == 'y');
+	case 6: maxgen = atoi(argv[5]);
+	case 5: mrate = atof(argv[4]);
+	case 4: xrate = atof(argv[3]);
+	case 3: psize = atoi(argv[2]);
+	case 2: fname = argv[1];
     }
 
     srand( (unsigned)time( NULL ) );
@@ -117,11 +128,11 @@ int main(int argc, char *argv[])
     pro_open(fname);
     S = sol_new();
 
-    ga = ga_new(10, P.m);
+    ga = ga_new(psize, P.m);
 
-    ga->xrate = 0.9;
-    ga->mrate = 0.05;
-    ga->maxgen = 10000;
+    ga->xrate = xrate;
+    ga->mrate = mrate;
+    ga->maxgen = maxgen;
     ga->maxmin = MINIMIZE;
     ga->elitism = true;
 
@@ -135,7 +146,7 @@ int main(int argc, char *argv[])
 
     PrintGenome(ga->best);
     printf("\n");
-//    sol_gantt(S);
+	if(gantt) sol_gantt(S);
 
     PrintPop(ga->newpop);
 
