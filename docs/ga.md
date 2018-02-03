@@ -36,11 +36,11 @@
 
 GA의 가장 중요한 개념이며, 알고리즘 구현의 핵심인 빌딩블럭(building block) 가설에 대해 살펴보자.
 
-> A genetic algorithm seeks near-optimal performance through the juxtaposition of 
-> short, low-order, high performance schemata, called the building blocks. 
->
-> [참고] Genetic Algorithms in Search, Optimization & Machine Learning by David E. Goldberg 
-
+'''
+A genetic algorithm seeks near-optimal performance through the juxtaposition of 
+short, low-order, high performance schemata, called the building blocks. 
+[참고] Genetic Algorithms in Search, Optimization & Machine Learning by David E. Goldberg 
+'''
 	 
 유전알고리즘은 빌딩블럭의 병렬적 결합을 통하여 해를 탐색한다. 빌딩블럭은 짧고 고정인자 갯수가 적은 우수한 스키마를 말한다. 스키마는 개체의 특성을 결정하는 유전 형질로 볼 수 있다. 짧고 고정 인자 수가 적은 스키마는 유전 연산에 의해 잘 파괴되지 않고 계속 다음 세대의 개체로 유전될 수 있으며, 우수한 스키마를 가진 개체는 살아 남아 다음 세대의 생산에 참여하게 된다.
 
