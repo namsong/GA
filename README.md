@@ -10,4 +10,4 @@ C 언어를 사용하여 유전알고리듬(GA:Genetic Algorithm)을 구현할 �
 f(x) = x * sin(10.*PI * x) + 3.5
 -1.0 <= x <= 2.0
 
-![함수그래프](./function-plot.jpg)
+![함수그래프](./plot-function.jpg)
