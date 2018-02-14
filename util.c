@@ -7,7 +7,7 @@ double randp()
 	return (double)rand()/RAND_MAX;
 }
 
-// 2진수를 실수로 변환
+// 2진수가 저장된 문자배열을 실수로 변환
 //  bits : 2진수 배열의 시작 포인터
 //     n : 2진수 자리수
 //  xmin : 최소값
