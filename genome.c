@@ -2,6 +2,10 @@
 #include <memory.h>
 #include "genome.h"
 
+void (*genome_init)(genome_t *one);	// 개체 초기화 함수
+void (*genome_eval)(genome_t *one);	// 개체 평가 함수
+void (*genome_print)(const char *title, genome_t *one); // 개체 출력 함수
+
 // gene 의 위치
 void *genome_gene(genome_t *g, int i)
 {

@@ -18,9 +18,8 @@ typedef struct ga_t {
     int       maxgen;   // 최대 세대 교체 수
     obj_t     maxmin;   // 목적 함수 타입
     bool      elitism;  // 모집단에 가장 좋은 개체를 유지할 것인지 여부
+	int       verbose;  // 진행과정을 출력할 최대 세대 교체 수
 
-    void      (*genome_init)(genome_t *one);	// 개체 초기화 함수
-    void      (*genome_eval)(genome_t *one);	// 개체 평가 함수
     void      (*selection)(pop_t *newpop, pop_t *oldpop); // 선택 함수
     void      (*crossover)(genome_t *dad, genome_t *mom); // 교차변이 함수
     void      (*mutation)(genome_t *one, double mrate);	  // 돌연변이 함수

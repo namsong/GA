@@ -1,4 +1,5 @@
-﻿#include <stdlib.h>
+﻿#include <stdio.h>
+#include <stdlib.h>
 #include "pop.h"
 
 // 모집단 생성
@@ -36,4 +37,15 @@ void pop_del(pop_t **pop)
     }
 }
 
+void pop_print(const char *title, pop_t *p)
+{
+	printf(title);
+	if(genome_print){
+		int i;
+		for (i = 0; i < p->psize; i++) {
+			genome_print("",p->genomes[i]);
+		}
+	}
+	printf("\n");
+}
 

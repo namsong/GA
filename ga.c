@@ -1,4 +1,5 @@
-﻿#include <stdlib.h>
+﻿#include <stdio.h>
+#include <stdlib.h>
 #include <memory.h>
 #include "ga.h"
 
@@ -48,9 +49,10 @@ void ga_initialize(ga_t *ga)
     int i;
 
     for (i = 0; i < ga->psize; i++) {
-        ga->genome_init(ga->newpop->genomes[i]);
+        genome_init(ga->newpop->genomes[i]);
     }
-    ga->genome_eval(ga->best);
+    genome_eval(ga->best);
+	
 }
 
 // 두 개체의 적응도 비교
@@ -73,24 +75,18 @@ bool better(ga_t *ga, genome_t *a, genome_t *b)
 // 엘리티즘도 구현한다.
 void ga_evaluation(ga_t *ga)
 {
-    int i, b, w;
+    int i;
     genome_t **genomes = ga->newpop->genomes;
+	genome_t *best;
 
-    b = w = 0;
-    ga->genome_eval(genomes[0]);
+    genome_eval(genomes[0]);
+	best = genomes[0];
     for (i = 1; i < ga->psize; i++) {
-        ga->genome_eval(genomes[i]);
-        if (better(ga, genomes[i], genomes[b])) b = i;
-        if (better(ga, genomes[w], genomes[i])) w = i;
+        genome_eval(genomes[i]);
+        if (better(ga, genomes[i], best)) best = genomes[i];
     }
-    ga->newpop->best = b;
-    ga->newpop->worst = w;
-
-    if (better(ga, genomes[b], ga->best)) {
-        genome_copy(ga->best, genomes[b]);
-    } else if (ga->elitism // if use the elitism stratage
-               && genomes[b]->value != ga->best->value) { // and the best genome was destroyed,  
-        genome_copy(genomes[w], ga->best); // change the worst genome with the best genome 
+    if (better(ga, best, ga->best)) {
+        genome_copy(ga->best, best);
     }
 }
 
@@ -99,10 +95,28 @@ void ga_evaluation(ga_t *ga)
 void ga_selection(ga_t *ga)
 {
     pop_t *tmppop = ga->newpop;
-    ga->newpop = ga->oldpop;
+	
+	ga->newpop = ga->oldpop;
     ga->oldpop = tmppop;
 
     ga->selection(ga->newpop, ga->oldpop);
+
+	if(ga->elitism) { // find the best and the worst
+		genome_t **genomes = ga->newpop->genomes;
+		genome_t *best, *worst;
+		int i;
+
+		best = ga->newpop->genomes[0];
+		worst = ga->newpop->genomes[0];
+		for (i = 1; i < ga->psize; i++) {
+			if (better(ga, genomes[i], best)) best = genomes[i];
+			if (better(ga, worst, genomes[i])) worst = genomes[i];
+		}
+		
+		if (better(ga, ga->best, best)) { // and the best genome was destroyed,  
+			genome_copy(worst, ga->best); // change the worst genome with the best genome 
+		}
+	}
 }
 
 // 교차변이
@@ -140,13 +154,41 @@ void ga_mutation(ga_t *ga)
 // GA 를 수행한다.
 void ga_run(ga_t *ga)
 {
-    ga_initialize(ga);
+	if(!genome_init) {
+		fprintf(stderr,"ERROR: genome_init is not set up.\n");
+		exit(-1);
+	}
+	if(!genome_eval) {
+		fprintf(stderr,"ERROR: genome_eval is not set up.\n");
+		exit(-1);
+	}
+
+	ga_initialize(ga);
     ga_evaluation(ga);
+	if (0 < ga->verbose) {
+		pop_print("init population:\n", ga->newpop);
+	}
     for (ga->ngen = 0; ga->ngen < ga->maxgen; ga->ngen++) {
         ga_selection(ga);
+		if(ga->ngen < ga->verbose) {
+			printf("%d-th generation --------------\n",ga->ngen+1);
+			pop_print("selection:\n",ga->newpop);
+		}
         ga_crossover(ga);
+		if(ga->ngen < ga->verbose) {
+			ga_evaluation(ga);
+			pop_print("crossover:\n",ga->newpop);
+		}
         ga_mutation(ga);
+		if(ga->ngen < ga->verbose) {
+			ga_evaluation(ga);
+			pop_print("mution:\n",ga->newpop);
+		}
         ga_evaluation(ga);
+		if(ga->ngen < ga->verbose) {
+			genome_print("best:\n", ga->best);
+			printf("\n");
+		}
     }
 }
 
